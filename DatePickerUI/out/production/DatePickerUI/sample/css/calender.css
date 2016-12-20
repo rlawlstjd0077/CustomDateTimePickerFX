@@ -1,0 +1,114 @@
+.date-chooser {
+    -fx-skin: "sample.control.DateChooserSkin";
+    -fx-background-color:white;
+    -fx-border-color:#4189DE;
+
+}
+.label{
+    -fx-font-family: "Roboto";
+    -fx-font-weight: bold;
+}
+
+.weekday-cell {
+    -fx-text-alignment: left;
+    -fx-background-color: transparent;
+}
+.weekday-cell .label{
+    -fx-text-fill: #4189DE;
+
+}
+
+.week-of-year-cell {
+    -fx-background-color: lightgray;
+    -fx-background-radius: 2 2 2 2;
+    -fx-text-fill: black;
+    -fx-text-alignment: left;
+}
+
+.calendar-cell {
+    /*-fx-background-color: skyblue, derive(skyblue, 25%), derive(skyblue, 50%), derive(skyblue, 75%);*/
+    -fx-background-color: transparent;
+    -fx-background-radius: 2 2 2 2;
+    -fx-text-fill: skyblue;
+    -fx-text-alignment: left;
+
+}
+
+.calendar-cell:hover {
+    -fx-background-color: #4189DE;
+    -fx-text-fill: white;
+}
+.calendar-cell:hover .label{
+-fx-text-fill: white;
+}
+.calendar-cell:pressed {
+    -fx-background-color: #4189DE;
+    -fx-text-fill: green;
+}
+
+.calendar-cell-selected {
+    -fx-background-radius: 2 2 2 2;
+    -fx-text-alignment: left;
+    -fx-background-color: #4189DE;
+
+}
+.calendar-cell-selected .label {
+-fx-text-fill: white;
+}
+.calendar-cell-inactive {
+    -fx-background-color: white;
+    -fx-background-radius: 2 2 2 2 ;
+    -fx-background-insets: 2 2 2 2 ;
+    -fx-text-fill: black;
+    -fx-text-alignment: left;
+}
+
+/*.calendar-cell-today {
+    -fx-background-color: yellow;
+    -fx-background-radius: 2 2 2 2;
+    -fx-text-fill: skyblue;
+    -fx-text-alignment: left;
+}*/
+
+.top-bar{
+    -fx-background-color: #4189DE;
+}
+.top-bar .label{
+    -fx-text-fill: white;
+
+}
+.combo-box{
+    -fx-background-color: #ffffff;
+    -fx-background-insets: 0;
+    -fx-border-color: #B3B9BF;
+    -fx-border-radius: 2px;
+    -fx-max-height: 32px;
+    -fx-padding: -3,0,-3,0;
+}
+.combo-box : pressed{
+    -fx-background-color: red;
+}
+.combo-box .arrow-button{
+    -fx-background-image: url("../image/arrow_small_down.png");
+    -fx-background-position:center;
+    -fx-background-repeat: no-repeat no-repeat;
+}
+
+.combo-box .arrow-button .arrow{
+    -fx-background-color:transparent;
+}
+.left-button{
+    -fx-background-color:transparent;
+    -fx-background-image:url("../image/white_left.png");
+    -fx-background-position:center;
+    -fx-background-repeat: no-repeat no-repeat;
+}
+.right-button{
+    -fx-background-color:transparent;
+    -fx-background-image:url("../image/white_right.png");
+    -fx-background-position:center;
+    -fx-background-repeat: no-repeat no-repeat;
+}
+.bottom-bar .label{
+    -fx-text-fill: #4189DE;
+}

@@ -1,0 +1,23 @@
+.date-picker-form{
+    -fx-skin:"sample.control.DatePickerFormSkin";
+}
+.combo-box .arrow-button{
+    -fx-background-image : url("../image/calendar_gray.png");
+    -fx-background-size: 20 20;
+    -fx-background-position:center;
+    -fx-background-repeat: no-repeat no-repeat;
+}
+.combo-box .arrow-button .arrow{
+        -fx-background-color:transparent;
+
+}
+.combo-box{
+    -fx-background-color: #ffffff;
+    -fx-background-insets: 0;
+    -fx-border-color: #B3B9BF;
+    -fx-border-radius: 2px;
+    -fx-max-height: 32px;
+    -fx-padding: -3,0,-3,0;
+}
+.button{
+}
