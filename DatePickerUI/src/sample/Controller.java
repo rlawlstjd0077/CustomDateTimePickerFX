@@ -49,7 +49,7 @@ public class Controller implements Initializable {
 
 
     public void comboChanged(ActionEvent event){
-        if ((startDate = startPicker.getDate()) != null) {
+        if ((startDate = startPicker.getString()) != null) {
             startTime = startPicker.getTime();
             selectedValue = combo_period.getValue().toString();
             Calendar cal = modifyDate();

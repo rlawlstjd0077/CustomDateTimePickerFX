@@ -2,20 +2,16 @@
     -fx-skin: "sample.control.DateChooserSkin";
     -fx-background-color:white;
     -fx-border-color:#4189DE;
-
 }
-.label{
-    -fx-font-family: "Roboto";
-    -fx-font-weight: bold;
-}
-
 .weekday-cell {
     -fx-text-alignment: left;
     -fx-background-color: transparent;
 }
 .weekday-cell .label{
     -fx-text-fill: #4189DE;
-
+    -fx-font-size : 14;
+    -fx-font-family: "Roboto";
+    -fx-font-weight: bold;
 }
 
 .week-of-year-cell {
@@ -31,16 +27,15 @@
     -fx-background-radius: 2 2 2 2;
     -fx-text-fill: skyblue;
     -fx-text-alignment: left;
-
 }
 
 .calendar-cell:hover {
     -fx-background-color: #4189DE;
-    -fx-text-fill: white;
 }
 .calendar-cell:hover .label{
--fx-text-fill: white;
+    -fx-text-fill: white;
 }
+
 .calendar-cell:pressed {
     -fx-background-color: #4189DE;
     -fx-text-fill: green;
@@ -50,10 +45,9 @@
     -fx-background-radius: 2 2 2 2;
     -fx-text-alignment: left;
     -fx-background-color: #4189DE;
-
 }
 .calendar-cell-selected .label {
--fx-text-fill: white;
+    -fx-text-fill: white;
 }
 .calendar-cell-inactive {
     -fx-background-color: white;
@@ -62,38 +56,26 @@
     -fx-text-fill: black;
     -fx-text-alignment: left;
 }
-
 /*.calendar-cell-today {
     -fx-background-color: yellow;
     -fx-background-radius: 2 2 2 2;
     -fx-text-fill: skyblue;
     -fx-text-alignment: left;
 }*/
-
 .top-bar{
     -fx-background-color: #4189DE;
 }
 .top-bar .label{
     -fx-text-fill: white;
-
-}
-.combo-box{
-    -fx-background-color: #ffffff;
-    -fx-background-insets: 0;
-    -fx-border-color: #B3B9BF;
-    -fx-border-radius: 2px;
-    -fx-max-height: 32px;
-    -fx-padding: -3,0,-3,0;
-}
-.combo-box : pressed{
-    -fx-background-color: red;
+    -fx-font-size : 14;
+    -fx-font-family: "Roboto";
+    -fx-font-weight: bold;
 }
 .combo-box .arrow-button{
     -fx-background-image: url("../image/arrow_small_down.png");
     -fx-background-position:center;
     -fx-background-repeat: no-repeat no-repeat;
 }
-
 .combo-box .arrow-button .arrow{
     -fx-background-color:transparent;
 }
@@ -103,12 +85,38 @@
     -fx-background-position:center;
     -fx-background-repeat: no-repeat no-repeat;
 }
+.left-button:focused{
+    -fx-background-color : transparent;
+}
 .right-button{
     -fx-background-color:transparent;
     -fx-background-image:url("../image/white_right.png");
     -fx-background-position:center;
     -fx-background-repeat: no-repeat no-repeat;
 }
+.right-button:focused{
+     -fx-background-color : transparent;
+ }
 .bottom-bar .label{
     -fx-text-fill: #4189DE;
+    -fx-font-size : 14;
+    -fx-font-family: "Roboto";
+    -fx-font-weight: bold;
+}
+.bottom-bar .combo-box-popup .list-view .list-cell {
+    -fx-background-color:red;
+}
+.combo-box{
+    -fx-background-color: #FFFFFF;
+    -fx-background-insets: 0;
+    -fx-border-color: #B3B9BF;
+    -fx-border-radius: 2px;
+    -fx-max-height: 32px;
+    -fx-padding: -3,0,-3,0;
+}
+.combo-box-base:showing{
+    -fx-background-color:transparent;
+}
+.combo-box-base:focused{
+    -fx-background-color:transparent;
 }

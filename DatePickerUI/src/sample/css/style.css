@@ -1,16 +1,10 @@
 .root{
     -fx-font-size : 14;
     -fx-font-family: "Roboto";
-    -fx-font-weight: bold;
-    -fx-font-size : 14;
 }
-.label{
 
-}
 #title, #btn{
-    -fx-font-family: "Roboto";
     -fx-font-weight: bold;
-    -fx-font-size: 14
 }
 .control{
     -fx-min-width : 120;
@@ -25,22 +19,22 @@
     -fx-outer-border:#2196F3;
 }
 .control:disabled{
-    -fx-opacity: 0.6 ;
+    -fx-opacity: 0.6;
 }
-.button{
+#btn{
     -fx-min-width : 135;
     -fx-margin-left : 10;
     -fx-background-color: #4189DE;
     -fx-border-color : #0D47A1;
     -fx-border-width : 0.15;
 }
-.button:hover{
+#btn:hover{
     -fx-background-color: #438FE7;
 }
-.button:focused{
+#btn:focused{
     -fx-background-color : #4881D0;
 }
-.button:armed{
+#btn:armed{
     -fx-background-color : #2671CC;
 }
 .date-picker-popup > .month-year-pane > {
@@ -57,18 +51,18 @@
 .date-picker-popup > * > .day-cell:hover{
     -fx-background-color:#2196F3;
 }
-#combobox .list-view{
+.combo-box .list-view{
     -fx-focus-color: #2196F3;
     -fx-outer-border : #2196F3;
 
 }
 .combo-box .list-view .list-cell{
 }
-#combobox .list-view .list-cell:hover{
+.combo-box .list-view .list-cell:hover{
         -fx-background-color: #2196F3;
         -fx-focus-color: #2196F3;
 }
-#combobox .list-view .list-cell:focused{
+.combo-box .list-view .list-cell:focused{
         -fx-background-color: #2196F3;
         -fx-border-color: #2196F3;
 }
@@ -80,15 +74,36 @@
     -fx-max-height: 32px;
     -fx-padding: -3,0,-3,0;
 }
+
 .combo-box:hover{
     -fx-border-color:#2196F3;
 }
-.combo_period > .arrow-button{
+.combo-box:focused{
+    -fx-border-color:#2196F3;
+}
+.combo-box .scroll-bar{
+    -fx-background-color:transparent;
+}
+#combo_period > .arrow-button{
     -fx-background-image:url("../image/arrow_small_down.png");
     -fx-background-position:center;
     -fx-background-repeat: no-repeat no-repeat;
 }
-.combo_period > .arrow-button > .arrow{
+#combo_period > .arrow-button > .arrow{
     -fx-background-color: transparent;
 }
+.combo-box .scroll-bar:vertical{
+        -fx-background-color:transparent;
+}
+.combo-box .scroll-bar:vertical .decrement-arrow{
+        -fx-background-color:transparent;
+}
+.combo-box .scroll-bar:vertical .increment-arrow{
+        -fx-background-color:transparent;
+}
+.form-button{
+     -fx-background-color: #ffffff;
+     -fx-border-color: transparent;
+}
+
 

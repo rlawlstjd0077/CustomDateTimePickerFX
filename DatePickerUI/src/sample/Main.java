@@ -11,10 +11,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Font.loadFont(getClass().getResourceAsStream("Roboto-Regular.ttf"),
+        Font.loadFont(getClass().getResourceAsStream("Roboto-Bold.ttf"),
                 14
         );
-        Font.loadFont(getClass().getResourceAsStream("Roboto-Bold.ttf"),
+        Font.loadFont(getClass().getResourceAsStream("Roboto-Regular.ttf"),
                 14
         );
         Parent root = FXMLLoader.load(getClass().getResource("fxml/sample.fxml"));

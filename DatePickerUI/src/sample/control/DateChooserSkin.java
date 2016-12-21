@@ -25,11 +25,10 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateChooserSkin extends SkinBase<DateChooser> {
-
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMMM yyyy", Locale.ENGLISH);
     private final Date date;
     private final Label month;
     private final BorderPane content;
-    final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMMM yyyy", Locale.ENGLISH);
     private int currentYear;
     private int currentMonth;
     private int currentDay;
@@ -43,14 +42,9 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
         public CalendarCell(Date day, String text) {
             this.date = day;
             label = new Label(text);
-//            getChildren().add(label);
         }
-
         public Date getDate() {
             return date;
-        }
-        public String getText(){
-            return label.getText();
         }
         public void setLabel(String text){
             label = new Label(text);
@@ -62,110 +56,126 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
 
     public DateChooserSkin(DateChooser dateChooser) {
         super(dateChooser);
-        Font.loadFont((getClass().getResourceAsStream("Roboto-Regular.ttf")),
-                14
-        );
-        Font.loadFont((getClass().getResourceAsStream("Roboto-Bold.ttf")),
-                14
-        );
+
         this.dateChooser = dateChooser;
-        // this date is the selected date
-        date = dateChooser.getDate();
-        final DatePickerPane calendarPane = new DatePickerPane(date);
+        this.date = dateChooser.getDate();          // this date is the selected date
+
+        // content the part of BorderPane
+        HBox topBar = new HBox();
+        final DatePickerPane calendarPane = new DatePickerPane(date);               // create center content
+        VBox bottomBar = new VBox();
+
+        /* create top content */
+        {
+            month = new Label(simpleDateFormat.format(calendarPane.getShownMonth()));
+
+            Button monthBack = new Button();
+            monthBack.getStyleClass().add("left-button");
+            monthBack.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    calendarPane.forward(-1);
+                }
+            });
+
+            Button monthForward = new Button();
+            monthForward.getStyleClass().add("right-button");
+            monthForward.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    calendarPane.forward(1);
+                }
+            });
+            topBar.setHgrow(month, Priority.ALWAYS);
+            month.setMaxWidth(Double.MAX_VALUE);
+            month.setAlignment(Pos.BOTTOM_CENTER);
+            topBar.setMargin(month, new Insets(11, 0, 0, 0));
+            topBar.setMargin(monthBack, new Insets(7, 0, 0, 0));
+            topBar.setMargin(monthForward, new Insets(7, 0, 0, 0));
+            topBar.getChildren().addAll(monthBack, month, monthForward);
+            topBar.getStyleClass().setAll("top-bar");
+            topBar.setPrefHeight(40);
+        }
+
+        /*create bottom box content*/
+        {
+            bottomBar.getStyleClass().setAll("bottom-bar");
+            bottomBar.setPrefHeight(124);
+
+            HBox topBox= new HBox();
+            HBox bottomBox = new HBox();
+
+            topBox.setPrefHeight(74);
+            bottomBox.setPrefHeight(50);
 
 
-        month = new Label(simpleDateFormat.format(calendarPane.getShownMonth()));
-        HBox topBox = new HBox();
+            Label time = new Label("Time : ");
+            ComboBox timeCombo = new ComboBox();
 
-        // create the navigation Buttons
-        Button monthBack = new Button();
-        monthBack.getStyleClass().add("left-button");
-        monthBack.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+            time.setPrefWidth(75);
+            time.setPrefHeight(16);
+            timeCombo.setPrefWidth(167);
+            timeCombo.setPrefHeight(36);
 
-            @Override
-            public void handle(ActionEvent event) {
-                calendarPane.forward(-1);
-            }
-        });
-        Button monthForward = new Button();
-        monthForward.getStyleClass().add("right-button");
-        monthForward.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+            ObservableList<String> observableList = FXCollections.observableArrayList(getTimeList(dateChooser.getTimeInterval()));
+            timeCombo.setItems(observableList);
+            this.currentTime = observableList.get(0).substring(0, 13);
+            timeCombo.setVisibleRowCount(5);
+            timeCombo.setValue(currentTime);
+            topBox.setMargin(time, new Insets(30,0,0,20));
+            topBox.setMargin(timeCombo, new Insets(24, 0, 0, -10));
+            timeCombo.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    currentTime = timeCombo.getValue().toString().substring(0, 13);
+                }
+            });
+            topBox.getChildren().addAll(time, timeCombo);
 
-            @Override            public void handle(ActionEvent event) {
+            Button okButton = new Button("OK");
+            Button cancelButton = new Button("CANCEL");
+            okButton.setPrefWidth(80);
+            cancelButton.setPrefWidth(80);
+            bottomBox.setMargin(okButton, new Insets(5,0,0,30));
+            bottomBox.setMargin(cancelButton, new Insets(5,0,0,50));
 
-                calendarPane.forward(1);
-            }
-        });
-//        monthBack.setPadding(new Insets());
+            okButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    dateChooser.onChooseDate(currentYear, currentMonth, currentDay, currentTime);
+                    System.out.println("ok click");
+                }
+            });
+            cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    System.out.println("cancel click");
+                    dateChooser.closeChooser();
+                }
+            });
 
-        // center the label and make it grab all free space
-        topBox.setHgrow(month, Priority.ALWAYS);
-        month.setMaxWidth(Double.MAX_VALUE);
-        month.setAlignment(Pos.BOTTOM_CENTER);
-        topBox.setMargin(month, new Insets(11,0,0,0));
-        topBox.setMargin(monthBack, new Insets(7,0,0,0));
-        topBox.setMargin(monthForward, new Insets(7,0,0,0));
+            bottomBox.getChildren().addAll(okButton, cancelButton);
 
-        topBox.getChildren().addAll(monthBack, month, monthForward);
-        topBox.getStyleClass().setAll("top-bar");
-        topBox.setPrefHeight(40);
-
-        HBox bottomhBox = new HBox();
-        bottomhBox.getStyleClass().setAll("bottom-bar");
-        bottomhBox.getChildren().clear();
-        bottomhBox.setPrefHeight(74);
-        Label label = new Label("Time : ");
-        label.setPrefWidth(60);
-        label.setPrefHeight(16);
-        label.setPadding(new Insets(28, 0, 0, 17));
-        HBox textBox = new HBox();
-        HBox labelBox = new HBox();
-        labelBox.setPrefWidth(83);
-        labelBox.setPrefHeight(54);
-        labelBox.getChildren().add(label);
-        ComboBox timeBox = new ComboBox();
-        timeBox.setPrefWidth(167);
-        timeBox.setPrefHeight(36);
-        textBox.setPrefWidth(200);
-        textBox.setPrefHeight(54);
-
-
-        textBox.getChildren().add(timeBox);
-        textBox.setMargin(timeBox, new Insets(20,0,0,0));
-
-
-        ObservableList<String> observableList = FXCollections.observableArrayList(getTimeList(dateChooser.getTimeInterval()));
-        timeBox.getItems().addAll(observableList);
-        this.currentTime = observableList.get(0);
-        timeBox.setValue(currentTime);
-        timeBox.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                currentTime = timeBox.getValue().toString();
-            }
-        });
-
-        bottomhBox.getChildren().addAll(labelBox, timeBox);
+            bottomBar.getChildren().addAll(topBox, bottomBox);
+        }
         // use a BorderPane to Layout the view
         content = new BorderPane();
-        getChildren().add(content);
-        content.setTop(topBox);
+        content.setTop(topBar);
         content.setCenter(calendarPane);
-        content.setBottom(bottomhBox);
+        content.setBottom(bottomBar);
+        getChildren().add(content);
+
     }
     public ArrayList<String> getTimeList(int minute){
         ArrayList<String> timeList = new ArrayList<>();
         int divideVal = 1440 / minute;
         for(int i = 0; i < divideVal; i++){
             int time = i * minute;
-            timeList.add(String.format("%02d", time / 60 ) + " : " + String.format("%02d", time % 60));
+            timeList.add(String.format("%02d", time / 60 ) + " : " + String.format("%02d", time % 60) + " : "  + "00  " + (time <= 720 ?  "AM" : "PM"));
         }
         return timeList;
     }
 
-    /**
-     @author eppleton
-     */
     class DatePickerPane extends Region {
 
         private final Date selectedDate;
@@ -177,7 +187,7 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
         private final CalendarCell woyCell = new CalendarCell(new Date(), "");
         private int rows, columns;//default
 
-        public DatePickerPane(Date date) {        // this date is the selected date too
+        public DatePickerPane(Date date) {
             setPrefSize(271, 236);
 //            woyCell.apcagetStyleClass().add("week-of-year-cell");
 //            setPadding(new Insets(0, -5, 0, -5));
@@ -195,14 +205,7 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
             refresh();
         }
 
-        /**
-         Move forward the specified number of Months, move backward by using
-         negative numbers
-
-         @param i
-         */
         public void forward(int i) {
-
             cal.add(Calendar.MONTH, i);
             month.setText(simpleDateFormat.format(cal.getTime()));
             refresh();
@@ -210,15 +213,12 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
 
         private void refresh() {
             super.getChildren().clear();
-            this.rows = 6; // most of the time 5 rows are ok
+            this.rows = 6;
             // save a copy to reset the date after our loop
             currentYear = cal.get(Calendar.YEAR);
             currentMonth = cal.get(Calendar.MONTH);
             currentDay = cal.get(Calendar.DAY_OF_MONTH);
             Date copy = new Date(cal.getTime().getTime());
-
-            // empty cell header of weak-of-year row
-//            super.getChildren().add(woyCell);
 
             // Display a styleable row of localized weekday symbols 
             DateFormatSymbols symbols = new DateFormatSymbols(Locale.ENGLISH);
@@ -241,9 +241,6 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
 
             int weekday = cal.get(Calendar.DAY_OF_WEEK);
 
-            // if the first day is a sunday we need to rewind 7 days otherwise the 
-            // code below would only start with the second week. There might be
-            // better ways of doing this...
             if(weekday  >= Calendar.FRIDAY){
                 Calendar check = Calendar.getInstance();
                 check.setTime(new Date(cal.getTime().getTime()));
@@ -252,18 +249,7 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
                     rows = 7;
                 }
             }
-//            if (weekday != Calendar.SUNDAY) {
-//                // it might be possible, that we need to add a row at the end as well...
-//
-//                Calendar check = Calendar.getInstance();
-//                check.setTime(new Date(cal.getTime().getTime()));
-//                int lastDate = check.getActualMaximum(Calendar.DATE);
-//                check.set(Calendar.DATE, lastDate);
-//                if ((lastDate + weekday) > 36) {
-//                    rows = 6;
-//                }
-//                cal.add(Calendar.DATE, -7);
-//            }
+
             cal.set(Calendar.DAY_OF_WEEK, 1);
 
             // used to identify and style the cell with the selected date;
@@ -272,12 +258,6 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
 
             for (int i = 0; i < (rows); i++) {
 
-                // first column shows the week of year
-//                CalendarCell calendarCell = new CalendarCell(cal.getTime(), "" + cal.get(Calendar.WEEK_OF_YEAR));
-//                calendarCell.getStyleClass().add("week-of-year-cell");
-//                super.getChildren().add(calendarCell);
-
-                // loop through current week
                 for (int j = 0; j < columns; j++) {
                     String formatted = sdf.format(cal.getTime());
                     final CalendarCell dayCell = new CalendarCell(cal.getTime(), formatted);
@@ -285,7 +265,7 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
                     if (cal.get(Calendar.MONTH) != month) {
                         dayCell.setLabel("");
                         dayCell.addCell();
-                        dayCell.getStyleClass().add("calendar-cell-inactive");
+                        dayCell.getStyleClass().setAll("calendar-cell-inactive");
                     } else {
                         dayCell.addCell();
                         if (isSameDay(testSelected, cal)) {
@@ -295,7 +275,6 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
                         if (isToday(cal)) {
                             dayCell.getStyleClass().add("calendar-cell-today");
                         }
-
                     }
                     dayCell.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -314,15 +293,6 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
                             dayCell.getStyleClass().remove("calendar-cell");
                             dayCell.getStyleClass().add("calendar-cell-selected");
                             selectedDayCell = dayCell;
-                            /*Calendar checkMonth = Calendar.getInstance();
-                            checkMonth.setTime(dayCell.getDate());
-
-                            if (checkMonth.get(Calendar.MONTH) != month) {
-                                forward(checkMonth.get(Calendar.MONTH) - month);
-                            }*/
-//                            dateChooser.onChooseDate();
-                            dateChooser.onChooseDate(currentYear, currentMonth, currentDay, currentTime);
-
                         }
                     });
 
@@ -344,28 +314,17 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
                     });
 
                     super.getChildren().add(dayCell);
-                    cal.add(Calendar.DATE, 1);  // number of days to add
+                    cal.add(Calendar.DATE, 1);
                 }
             }
             cal.setTime(copy);
         }
 
-        /**
-         Overriden, don't add Children directly
-
-         @return unmodifieable List
-         */
         @Override
         protected ObservableList<Node> getChildren() {
             return FXCollections.unmodifiableObservableList(super.getChildren());
         }
 
-        /**
-         get the current month our calendar displays. Should always give you the
-         correct one, even if some days of other mnths are also displayed
-
-         @return
-         */
         public Date getShownMonth() {
             return cal.getTime();
         }

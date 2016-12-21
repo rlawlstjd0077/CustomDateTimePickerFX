@@ -43,5 +43,8 @@ public class DateChooser extends Control{
     public void onChooseDate(int year, int month, int day, String time){
         this.datePickerForm.setComboBoxText(year, month, day, time);
     }
+    public void closeChooser(){
+        this.datePickerForm.hidePopup();
+    }
 
 }
