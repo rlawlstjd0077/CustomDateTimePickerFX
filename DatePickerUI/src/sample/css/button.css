@@ -1,0 +1,24 @@
+
+.blue-button{
+    -fx-background-radius: 2 2 2 2;
+    -fx-border-radius: 2 2 2 2;
+    -fx-background-color:#4189DE;
+    -fx-background-insets: 0;
+    -fx-border-width : 0.15;
+    -fx-border-color:#0D47A1;
+    -fx-font-family: "Roboto";
+    -fx-font-weight: bold;
+    -fx-font-size : 14;
+}
+.blue-button:focused{
+    -fx-background-color:#4189DE;
+    -fx-background-radius: 2 2 2 2;
+    -fx-focused-color:transparent;
+     -fx-border-radius: 2 2 2 2;
+}
+.blue-button:hover{
+    -fx-background-color: #438FE7;
+}
+.blue-button:armed{
+    -fx-background-color : #2671CC;
+}

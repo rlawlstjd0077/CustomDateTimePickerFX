@@ -26,9 +26,7 @@
     -fx-background-insets: 0;
     -fx-border-color: #B3B9BF;
     -fx-border-radius: 2px;
-
 }
-
 .form-button{
     -fx-background-color: #ffffff;
     -fx-border-color: transparent;
@@ -43,7 +41,4 @@
 .form-text:focused{
     -fx-focus-color:transparent;
     -fx-border-color:#2196F3;
-}
-.form-button:hover{
-    .
 }

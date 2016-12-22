@@ -6,13 +6,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import sample.control.DatePickerForm;
 
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -47,27 +45,14 @@ public class Controller implements Initializable {
         combo_period.setItems(list);
     }
 
-
     public void comboChanged(ActionEvent event){
-        if ((startDate = startPicker.getString()) != null) {
+        if ((startDate = startPicker.getDate()) != null) {
             startTime = startPicker.getTime();
             selectedValue = combo_period.getValue().toString();
             Calendar cal = modifyDate();
             String modifiedDate = mSimpleDateFormat.format(cal.getTime());
             endPicker.setComboBoxText(modifiedDate, startTime);
         }
-    }
-
-    public String judgeOverCurrentDate(String objDate){     //check objDate is over current
-        Date day1 = null;
-        Date day2 = null;
-        try {
-            day1 = mSimpleDateFormat.parse(objDate);
-            day2 = mSimpleDateFormat.parse(currentDate);
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-        }
-        return day1.compareTo(day2) > 0 ? currentDate : objDate;
     }
 
     public Calendar modifyDate(){

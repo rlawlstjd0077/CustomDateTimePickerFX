@@ -32,11 +32,9 @@ public class DateChooser extends Control{
     public Date getDate(){
         return date;
     }
-
     public void setTimeInterval(int minute){
         this.interval = minute;
     }
-
     public int getTimeInterval(){
         return this.interval;
     }
@@ -46,5 +44,4 @@ public class DateChooser extends Control{
     public void closeChooser(){
         this.datePickerForm.hidePopup();
     }
-
 }

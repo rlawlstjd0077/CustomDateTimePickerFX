@@ -11,10 +11,10 @@
           stylesheets="@../css/style.css">
 <children>
     <Label fx:id="title" text="Search Bar"  GridPane.columnIndex="0" GridPane.rowIndex="0" />
-    <DatePickerForm  fx:id="startPicker" GridPane.columnIndex="0" GridPane.rowIndex="1"  styleClass="control" prefHeight="30" />
+    <DatePickerForm  fx:id="startPicker" GridPane.columnIndex="0"  GridPane.rowIndex="1"  styleClass="control" prefHeight="30" />
     <Label text="~" GridPane.columnIndex="1" GridPane.rowIndex="1" />
     <DatePickerForm fx:id="endPicker" GridPane.columnIndex="2" GridPane.rowIndex="1" styleClass="control"/>
     <ComboBox fx:id="combo_period"  GridPane.columnIndex="3" GridPane.rowIndex="1" styleClass="control" onAction="#comboChanged"/>
-    <Button text="Search" textFill="white" prefWidth="130" GridPane.columnIndex="4" GridPane.rowIndex="1" styleClass="control" fx:id="btn" />
+    <Button text="Search" textFill="white" prefWidth="130" GridPane.columnIndex="4" GridPane.rowIndex="1" styleClass="control" fx:id="search_btn" />
 </children>
 </GridPane>

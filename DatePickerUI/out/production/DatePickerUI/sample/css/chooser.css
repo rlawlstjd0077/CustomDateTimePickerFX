@@ -18,7 +18,6 @@
 }
 .button{
     -fx-background-color: #4189DE;
-    -fx-border-color : #0D47A1;
     -fx-border-width : 0.15;
     -fx-text-fill:white;
     -fx-background-radius: 2 2 2 2;

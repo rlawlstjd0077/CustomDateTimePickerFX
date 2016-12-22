@@ -15,8 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -183,24 +181,18 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
         private CalendarCell selectedDayCell;
         // this is used to format the day cells
         private final SimpleDateFormat sdf = new SimpleDateFormat("d");
-        // empty cell header of weak-of-year row
-        private final CalendarCell woyCell = new CalendarCell(new Date(), "");
-        private int rows, columns;//default
+        private int rows, columns;
 
         public DatePickerPane(Date date) {
             setPrefSize(271, 236);
-//            woyCell.apcagetStyleClass().add("week-of-year-cell");
-//            setPadding(new Insets(0, -5, 0, -5));
+
             this.columns = 7;
             this.rows = 5;
 
-            // use a copy of Date, because it's mutable
-            // we'll helperDate it through the month
             cal = Calendar.getInstance();
             Date helperDate = new Date(date.getTime());
             cal.setTime(helperDate);
 
-            // the selectedDate is the date we will change, when a date is picked
             selectedDate = date;
             refresh();
         }
@@ -214,7 +206,6 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
         private void refresh() {
             super.getChildren().clear();
             this.rows = 6;
-            // save a copy to reset the date after our loop
             currentYear = cal.get(Calendar.YEAR);
             currentMonth = cal.get(Calendar.MONTH);
             currentDay = cal.get(Calendar.DAY_OF_MONTH);
@@ -224,18 +215,13 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
             DateFormatSymbols symbols = new DateFormatSymbols(Locale.ENGLISH);
             String[] dayNames = symbols.getShortWeekdays();
 
-            // @TODO use static constants to access weekdays, I suspect we 
-            // get problems with localization otherwise ( Day 1 = Sunday/ Monday in
-            // different timezones
             for (int i = 1; i < 8; i++) { // array starts with an empty field
                 CalendarCell calendarCell = new CalendarCell(cal.getTime(), dayNames[i].substring(0, 2));
                 calendarCell.addCell();
-                calendarCell.setPrefHeight(5);
                 calendarCell.getStyleClass().add("weekday-cell");
                 super.getChildren().add(calendarCell);
             }
 
-            // find out which month we're displaying
             cal.set(Calendar.DAY_OF_MONTH, 1);
             final int month = cal.get(Calendar.MONTH);
 
@@ -250,6 +236,7 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
                 }
             }
 
+            //The first of DAY_OF_WEEK is Sunday
             cal.set(Calendar.DAY_OF_WEEK, 1);
 
             // used to identify and style the cell with the selected date;
@@ -257,7 +244,6 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
             testSelected.setTime(selectedDate);
 
             for (int i = 0; i < (rows); i++) {
-
                 for (int j = 0; j < columns; j++) {
                     String formatted = sdf.format(cal.getTime());
                     final CalendarCell dayCell = new CalendarCell(cal.getTime(), formatted);
@@ -276,8 +262,8 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
                             dayCell.getStyleClass().add("calendar-cell-today");
                         }
                     }
-                    dayCell.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
+                    dayCell.setOnMouseClicked(new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent arg0) {
                             Calendar currentCal = Calendar.getInstance();
@@ -293,23 +279,6 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
                             dayCell.getStyleClass().remove("calendar-cell");
                             dayCell.getStyleClass().add("calendar-cell-selected");
                             selectedDayCell = dayCell;
-                        }
-                    });
-
-                    // grow the hovered cell in size  
-                    dayCell.setOnMouseEntered(new EventHandler<MouseEvent>() {
-
-                        @Override
-                        public void handle(MouseEvent e) {
-                        }
-                    });
-
-                    dayCell.setOnMouseExited(new EventHandler<MouseEvent>() {
-
-                        @Override
-                        public void handle(MouseEvent e) {
-                            dayCell.setScaleX(1);
-                            dayCell.setScaleY(1);
                         }
                     });
 
@@ -349,7 +318,6 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
             }
         }
     }
-    // utility methods
 
     private static boolean isSameDay(Calendar cal1, Calendar cal2) {
         if (cal1 == null || cal2 == null) {
