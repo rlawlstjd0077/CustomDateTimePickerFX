@@ -1,5 +1,5 @@
-.date-chooser {
-    -fx-skin: "sample.control.DateChooserSkin";
+.calendar-form {
+    -fx-skin: "sample.control.CalendarSkin";
     -fx-background-color:white;
     -fx-border-color:#4189DE;
 }

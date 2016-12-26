@@ -6,7 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
-import sample.control.DatePickerForm;
+import sample.control.DatePickerControl;
 
 import java.net.URL;
 import java.text.ParseException;
@@ -17,14 +17,14 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.GregorianCalendar;
 
-public class Controller implements Initializable {
+public class SearchBarControl implements Initializable {
 
     @FXML
     private ComboBox combo_period;
     @FXML
-    private DatePickerForm startPicker;
+    private DatePickerControl startPicker;
     @FXML
-    private DatePickerForm endPicker;
+    private DatePickerControl endPicker;
 
     private static final String DAY = "1 day";
     private static final String WEEK = "1 week";

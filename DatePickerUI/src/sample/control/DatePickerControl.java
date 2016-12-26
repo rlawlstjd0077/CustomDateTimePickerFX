@@ -1,44 +1,49 @@
 package sample.control;
 
-import javafx.beans.property.StringProperty;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Popup;
 import javafx.stage.Window;
 
-import java.util.Calendar;
 import java.util.Date;
 
 /**
  * Created by GSD on 2016-12-19.
  */
-public class DatePickerForm extends Control{
+public class DatePickerControl extends Control{
     private static final String DEFAULT_STYLE_CLASS = "date-picker-form";
-    private final Popup popup;
-    private final DateChooser dateChooser;
+    private Popup popup;
+    private CalendarControl calendarControl;
     private TextField textField;
-    private StringProperty text;
     private Date currentDate;
 
-    public DatePickerForm(){
+
+    public DatePickerControl(){
+//        if (Platform.isFxApplicationThread()) {
+//
+//        } else {
+//            // Intended for SceneBuilder
+//            Platform.runLater(this::init);
+//        }
+        init();
+    }
+    public void init(){
         getStyleClass().setAll(DEFAULT_STYLE_CLASS);
         popup = new Popup();
         currentDate = new Date(System.currentTimeMillis());
-        dateChooser = new DateChooser(this);
-        dateChooser.getStylesheets().add("sample/css/chooser.css");
+        calendarControl = new CalendarControl(this);
+        calendarControl.getStylesheets().add("sample/css/chooser.css");
     }
 
     @Override
     public String getUserAgentStylesheet() {
-        return "sample/css/form.css";
+        return "sample/css/date_picker.css";
     }
     public void handlePopup() {
         if (popup.isShowing()) {
             popup.hide();
         } else {
+
             final Window window = textField.getScene().getWindow();
             popup.setAutoHide(true);
             popup.setAutoFix(true);
@@ -56,7 +61,7 @@ public class DatePickerForm extends Control{
                     + textField.getHeight();
 
             popup.getContent().clear();
-            popup.getContent().addAll(dateChooser);
+            popup.getContent().addAll(calendarControl);
             popup.show(this.getParent(), x, y);
         }
     }
@@ -74,17 +79,13 @@ public class DatePickerForm extends Control{
     public void hidePopup(){
         popup.hide();
     }
-
     public void setTextField(TextField textField){
         this.textField = textField;
     }
     public String getDate(){
         return this.textField.getText().split("    ")[0];
     }
-    public Date getCurrentDate(){
-        return this.currentDate;
-    }
     public void setTimeInterval(int minute){
-        this.dateChooser.setTimeInterval(minute);
+        this.calendarControl.setTimeIntervalMin(minute);
     }
 }

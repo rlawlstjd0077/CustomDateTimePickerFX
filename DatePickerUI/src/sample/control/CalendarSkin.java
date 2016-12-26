@@ -22,45 +22,48 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class DateChooserSkin extends SkinBase<DateChooser> {
+public class CalendarSkin extends SkinBase<CalendarControl> {
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMMM yyyy", Locale.ENGLISH);
-    private final Date date;
+    private final Date currentDate;
     private final Label month;
     private final BorderPane content;
-    private int currentYear;
-    private int currentMonth;
-    private int currentDay;
-    private String currentTime;
-    private DateChooser dateChooser;
+    private int selectedYear;
+    private int selectedMonth;
+    private int selectedDay;
+    private String selectedTime;
+    private CalendarCell selectedDayCellTemp;
+    private CalendarCell selectedDayCell;
+    private CalendarCell todayCell;
+    private Date selectedDate;
+    private Date selectedDateTemp;
 
     private static class CalendarCell extends StackPane {
 
         private final Date date;
-        private Label label;
+        private Label day;
         public CalendarCell(Date day, String text) {
             this.date = day;
-            label = new Label(text);
+            this.day = new Label(text);
         }
         public Date getDate() {
             return date;
         }
-        public void setLabel(String text){
-            label = new Label(text);
+        public void setDay(String text){
+            day = new Label(text);
         }
         public void addCell(){
-            getChildren().add(label);
+            getChildren().add(day);
         }
     }
 
-    public DateChooserSkin(DateChooser dateChooser) {
-        super(dateChooser);
+    public CalendarSkin(CalendarControl calendarControl) {
+        super(calendarControl);
 
-        this.dateChooser = dateChooser;
-        this.date = dateChooser.getDate();          // this date is the selected date
+        this.currentDate = calendarControl.getCurrentDate();          // this currentDate is the selected currentDate
 
         // content the part of BorderPane
         HBox topBar = new HBox();
-        final DatePickerPane calendarPane = new DatePickerPane(date);               // create center content
+        final DatePickerPane calendarPane = new DatePickerPane(currentDate);               // create center content
         VBox bottomBar = new VBox();
 
         /* create top content */
@@ -106,7 +109,6 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
             topBox.setPrefHeight(74);
             bottomBox.setPrefHeight(50);
 
-
             Label time = new Label("Time : ");
             ComboBox timeCombo = new ComboBox();
 
@@ -115,17 +117,17 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
             timeCombo.setPrefWidth(167);
             timeCombo.setPrefHeight(36);
 
-            ObservableList<String> observableList = FXCollections.observableArrayList(getTimeList(dateChooser.getTimeInterval()));
+            ObservableList<String> observableList = FXCollections.observableArrayList(getTimeList(calendarControl.getTimeIntervalMin()));
             timeCombo.setItems(observableList);
-            this.currentTime = observableList.get(0).substring(0, 13);
+            this.selectedTime = observableList.get(0).substring(0, 13);
             timeCombo.setVisibleRowCount(5);
-            timeCombo.setValue(currentTime);
+            timeCombo.setValue(selectedTime);
             topBox.setMargin(time, new Insets(30,0,0,20));
             topBox.setMargin(timeCombo, new Insets(24, 0, 0, -10));
             timeCombo.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    currentTime = timeCombo.getValue().toString().substring(0, 13);
+                    selectedTime = timeCombo.getValue().toString().substring(0, 13);
                 }
             });
             topBox.getChildren().addAll(time, timeCombo);
@@ -140,15 +142,35 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
             okButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    dateChooser.onChooseDate(currentYear, currentMonth, currentDay, currentTime);
-                    System.out.println("ok click");
+                    calendarControl.onSelectDate(selectedYear, selectedMonth, selectedDay, selectedTime);
+                    selectedDayCellTemp = selectedDayCell;
+                    selectedDateTemp = selectedDate;
                 }
             });
             cancelButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    System.out.println("cancel click");
-                    dateChooser.closeChooser();
+                    calendarControl.closeCalendar();
+                    if (selectedDayCellTemp != null) {
+                        selectedDayCell.getStyleClass().add("calendar-cell");
+                        selectedDayCell.getStyleClass().remove("calendar-cell-selected");
+                        selectedDayCellTemp.getStyleClass().remove("calendar-cell");
+                        selectedDayCellTemp.getStyleClass().add("calendar-cell-selected");
+                        selectedDate = selectedDateTemp;
+                        selectedDayCell = selectedDayCellTemp;
+                    }else {
+                        if (isSameMonth(selectedDate, currentDate)) {
+                            selectedDayCell.getStyleClass().add("calendar-cell");
+                            selectedDayCell.getStyleClass().remove("calendar-cell-selected");
+                        } else {
+                            selectedDayCell.getStyleClass().add("calendar-cell");
+                            selectedDayCell.getStyleClass().remove("calendar-cell-selected");
+                            selectedDate = currentDate;
+                            todayCell.getStyleClass().add("calendar-cell-selected");
+                            todayCell.getStyleClass().remove("calendar-cell");
+                            selectedDayCell = todayCell;
+                        }
+                    }
                 }
             });
 
@@ -175,10 +197,7 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
     }
 
     class DatePickerPane extends Region {
-
-        private final Date selectedDate;
         private final Calendar cal;
-        private CalendarCell selectedDayCell;
         // this is used to format the day cells
         private final SimpleDateFormat sdf = new SimpleDateFormat("d");
         private int rows, columns;
@@ -206,9 +225,9 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
         private void refresh() {
             super.getChildren().clear();
             this.rows = 6;
-            currentYear = cal.get(Calendar.YEAR);
-            currentMonth = cal.get(Calendar.MONTH);
-            currentDay = cal.get(Calendar.DAY_OF_MONTH);
+            selectedYear = cal.get(Calendar.YEAR);
+            selectedMonth = cal.get(Calendar.MONTH);
+            selectedDay = cal.get(Calendar.DAY_OF_MONTH);
             Date copy = new Date(cal.getTime().getTime());
 
             // Display a styleable row of localized weekday symbols 
@@ -239,7 +258,7 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
             //The first of DAY_OF_WEEK is Sunday
             cal.set(Calendar.DAY_OF_WEEK, 1);
 
-            // used to identify and style the cell with the selected date;
+            // used to identify and style the cell with the selected currentDate;
             Calendar testSelected = Calendar.getInstance();
             testSelected.setTime(selectedDate);
 
@@ -249,7 +268,7 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
                     final CalendarCell dayCell = new CalendarCell(cal.getTime(), formatted);
                     dayCell.getStyleClass().add("calendar-cell");
                     if (cal.get(Calendar.MONTH) != month) {
-                        dayCell.setLabel("");
+                        dayCell.setDay("");
                         dayCell.addCell();
                         dayCell.getStyleClass().setAll("calendar-cell-inactive");
                     } else {
@@ -260,6 +279,7 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
                         }
                         if (isToday(cal)) {
                             dayCell.getStyleClass().add("calendar-cell-today");
+                            todayCell = dayCell;
                         }
                     }
 
@@ -268,9 +288,9 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
                         public void handle(MouseEvent arg0) {
                             Calendar currentCal = Calendar.getInstance();
                             currentCal.setTime(dayCell.getDate());
-                            currentYear = currentCal.get(Calendar.YEAR);
-                            currentMonth = currentCal.get(Calendar.MONTH);
-                            currentDay = currentCal.get(Calendar.DAY_OF_MONTH);
+                            selectedYear = currentCal.get(Calendar.YEAR);
+                            selectedMonth = currentCal.get(Calendar.MONTH);
+                            selectedDay = currentCal.get(Calendar.DAY_OF_MONTH);
                             if (selectedDayCell != null) {
                                 selectedDayCell.getStyleClass().add("calendar-cell");
                                 selectedDayCell.getStyleClass().remove("calendar-cell-selected");
@@ -329,5 +349,13 @@ public class DateChooserSkin extends SkinBase<DateChooser> {
     }
     private static boolean isToday(Calendar cal) {
         return isSameDay(cal, Calendar.getInstance());
+    }
+    private static boolean isSameMonth(Date date1, Date date2){
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(date1);
+        cal2.setTime(date2);
+
+        return cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)? true : false;
     }
 }

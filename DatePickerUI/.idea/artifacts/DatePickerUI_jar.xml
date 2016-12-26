@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="DatePickerUI:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/DatePickerUI_jar</output-path>
+    <root id="archive" name="DatePickerUI.jar">
+      <element id="module-output" name="DatePickerUI" />
+    </root>
+  </artifact>
+</component>

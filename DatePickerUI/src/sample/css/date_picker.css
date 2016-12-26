@@ -1,5 +1,5 @@
 .date-picker-form{
-    -fx-skin:"sample.control.DatePickerFormSkin";
+    -fx-skin:"sample.control.DatePickerSkin";
     -fx-font-size : 14;
     -fx-min-height : 40;
 }
@@ -35,6 +35,14 @@
     -fx-background-position:center;
     -fx-background-repeat: no-repeat no-repeat;
 }
+.form-button:focused{
+     -fx-background-color: #ffffff;
+     -fx-border-color: transparent;
+     -fx-background-insets: 0;
+     -fx-background-image:url("../image/calendar_gray.png");
+     -fx-background-position:center;
+     -fx-background-repeat: no-repeat no-repeat;
+ }
 .form-text:hover{
     -fx-border-color:#2196F3;
 }
