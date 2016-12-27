@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import sample.control.*?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.GridPane?>
-<?import sample.control.DatePickerControl?>
 
 <?import javafx.geometry.Insets?>
 <GridPane alignment="center" hgap="10" stylesheets="@../css/search_bar.css" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.SearchBarControl">
@@ -31,7 +24,7 @@
         </GridPane.margin>
     </DatePickerControl>
     <ComboBox fx:id="combo_period" onAction="#comboChanged" styleClass="control" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-    <Button fx:id="search_btn" prefWidth="130" styleClass="control" text="Search" textFill="white" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+    <Button fx:id="search_btn" prefWidth="130" styleClass="control" text="Search" textFill="white" GridPane.columnIndex="4" GridPane.rowIndex="1" onAction="#buttonClicked"/>
 </children>
    <columnConstraints>
       <ColumnConstraints />

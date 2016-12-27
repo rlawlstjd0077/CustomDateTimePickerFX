@@ -5,11 +5,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import sample.Data.DateInfo;
 import sample.control.DatePickerControl;
 
 import java.net.URL;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,6 +27,8 @@ public class SearchBarControl implements Initializable {
     private DatePickerControl startPicker;
     @FXML
     private DatePickerControl endPicker;
+    @FXML
+    private Button search_btn;
 
     private static final String DAY = "1 day";
     private static final String WEEK = "1 week";
@@ -33,37 +37,51 @@ public class SearchBarControl implements Initializable {
     private String selectedValue;
     private String currentDate;
     private String startTime;
-    private String startDate;
-    private SimpleDateFormat mSimpleDateFormat;
+    private Date startDate;
+    private SimpleDateFormat mFullDateFormat;
     private ObservableList<String> list = FXCollections.observableArrayList(DAY, WEEK, MONTH, YEAR);
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
-        mSimpleDateFormat = new SimpleDateFormat( "yyyy-MM-dd", Locale.KOREA );
+        mFullDateFormat = new SimpleDateFormat( "yyyy-MM-dd    HH : mm : ss", Locale.KOREA );
         Date currentTime = new Date();
-        currentDate = mSimpleDateFormat.format( currentTime );
+        currentDate = mFullDateFormat.format( currentTime );
         combo_period.setItems(list);
     }
 
-    public void comboChanged(ActionEvent event){
-        if ((startDate = startPicker.getDate()) != null) {
-            startTime = startPicker.getTime();
-            selectedValue = combo_period.getValue().toString();
-            Calendar cal = modifyDate();
-            String modifiedDate = mSimpleDateFormat.format(cal.getTime());
-            endPicker.setComboBoxText(modifiedDate, startTime);
+    public void buttonClicked(ActionEvent event){
+        if(isInvalidDateInterval(startPicker.getDate(), endPicker.getDate())){
+            //정상적인 처리
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("Date Interval is invalid.");
+            alert.showAndWait();
         }
     }
 
+    public boolean isInvalidDateInterval(Date start , Date end){
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(start);
+        cal2.setTime(end);
+        return cal1.compareTo(cal2) < 0 ? true : false;
+    }
+
+    public void comboChanged(ActionEvent event){
+         startDate = startPicker.getDate();
+         selectedValue = combo_period.getValue().toString();
+         Calendar cal = modifyDate();
+         String modifiedDate = mFullDateFormat.format(cal.getTime());
+         DateInfo endDateInfo = new DateInfo();
+         endDateInfo.setDate(modifiedDate);
+         endPicker.setComboBoxText(endDateInfo);
+    }
+
     public Calendar modifyDate(){
-        Date date = null;
-        try {
-            date = mSimpleDateFormat.parse(startDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         Calendar cal = new GregorianCalendar();
-        cal.setTime(date);
+        cal.setTime(startDate);
         switch (selectedValue) {
             case DAY:
                 cal.add(Calendar.DATE, 1);

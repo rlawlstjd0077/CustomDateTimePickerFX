@@ -17,7 +17,6 @@ public class Main extends Application {
         Font.loadFont(getClass().getResourceAsStream("Roboto-Regular.ttf"),
                 14
         );
-        MyComponent myComponent = new MyComponent();
         Parent root = FXMLLoader.load(getClass().getResource("fxml/search_bar.fxml"));
         primaryStage.setTitle("Hello World");
         Scene scene = new Scene(root, 900, 275);

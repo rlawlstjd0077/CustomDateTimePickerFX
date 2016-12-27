@@ -1,11 +1,20 @@
 package sample.control;
 
+import com.sun.javafx.event.RedirectedEvent;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Popup;
 import javafx.stage.Window;
+import sample.Data.DateInfo;
 
 import java.util.Date;
+
+import static com.sun.javaws.ui.SplashScreen.hide;
 
 /**
  * Created by GSD on 2016-12-19.
@@ -15,9 +24,7 @@ public class DatePickerControl extends Control{
     private Popup popup;
     private CalendarControl calendarControl;
     private TextField textField;
-    private Date currentDate;
-
-
+    private DateInfo dateInfo;
     public DatePickerControl(){
 //        if (Platform.isFxApplicationThread()) {
 //
@@ -27,10 +34,10 @@ public class DatePickerControl extends Control{
 //        }
         init();
     }
+
     public void init(){
         getStyleClass().setAll(DEFAULT_STYLE_CLASS);
         popup = new Popup();
-        currentDate = new Date(System.currentTimeMillis());
         calendarControl = new CalendarControl(this);
         calendarControl.getStylesheets().add("sample/css/chooser.css");
     }
@@ -43,7 +50,6 @@ public class DatePickerControl extends Control{
         if (popup.isShowing()) {
             popup.hide();
         } else {
-
             final Window window = textField.getScene().getWindow();
             popup.setAutoHide(true);
             popup.setAutoFix(true);
@@ -63,29 +69,28 @@ public class DatePickerControl extends Control{
             popup.getContent().clear();
             popup.getContent().addAll(calendarControl);
             popup.show(this.getParent(), x, y);
+            popup.setAutoHide(true);
         }
     }
-    public void setComboBoxText(String date, String time){
-        this.textField.setText(date + "     " +  time);
+    public void setComboBoxText(DateInfo dateInfo){
+        this.dateInfo = dateInfo;
+        this.textField.setText(dateInfo.getDateString());
     }
-    public void setComboBoxText(int year, int month, int day, String time){
-        this.textField.setText( year + "-" + String.format("%02d", month + 1 )+ "-" + String.format("%02d", day)
-                +  "    " + time);
-        popup.hide();
-    }
-    public String getTime(){
-        return this.textField.getText().split("    ")[1];
+
+    public Date getDate(){
+        this.dateInfo.setDate(textField.getText());
+        return this.dateInfo.getDate();
     }
     public void hidePopup(){
         popup.hide();
     }
-    public void setTextField(TextField textField){
+    public void initTextField(TextField textField){
         this.textField = textField;
-    }
-    public String getDate(){
-        return this.textField.getText().split("    ")[0];
     }
     public void setTimeInterval(int minute){
         this.calendarControl.setTimeIntervalMin(minute);
+    }
+    public void setDateInfo(DateInfo date) {
+        this.dateInfo = date;
     }
 }

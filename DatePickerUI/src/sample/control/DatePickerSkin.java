@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SkinBase;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import sample.Data.DateInfo;
 
 import java.util.Calendar;
 
@@ -17,6 +18,7 @@ public class DatePickerSkin extends SkinBase<DatePickerControl>{
     private Button calendarButton;
     private TextField textField;
     private Pane pane;
+    private DateInfo currentDateInfo;
 
     public DatePickerSkin(){
         this(new DatePickerControl());
@@ -31,7 +33,9 @@ public class DatePickerSkin extends SkinBase<DatePickerControl>{
         textField.setPrefWidth(220);
         textField.setPrefHeight(36);
         textField.getStyleClass().add("form-text");
-        textField.setText(settingCurrentDate());
+        settingCurrentDate();
+        textField.setText(currentDateInfo.getDateString());
+        datePickerControl.setDateInfo(currentDateInfo);
 
         calendarButton.setPrefWidth(32);
         calendarButton.setPrefHeight(32);
@@ -49,11 +53,12 @@ public class DatePickerSkin extends SkinBase<DatePickerControl>{
         pane.getChildren().addAll(textField, calendarButton);
         pane.getStyleClass().addAll("form");
         getChildren().add(pane);
-        datePickerControl.setTextField(this.textField);
+        datePickerControl.initTextField(this.textField);
     }
 
-    private String settingCurrentDate() {
+    private void settingCurrentDate() {
         Calendar cal = Calendar.getInstance();
-        return cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1 )+ "-" + cal.get(Calendar.DAY_OF_MONTH) + "    00 : 00 : 00";
+        currentDateInfo = new DateInfo();
+        currentDateInfo.setDate(cal);
     }
 }

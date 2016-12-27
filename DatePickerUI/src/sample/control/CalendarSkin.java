@@ -15,6 +15,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import sample.Data.DateInfo;
+
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ public class CalendarSkin extends SkinBase<CalendarControl> {
     private CalendarCell todayCell;
     private Date selectedDate;
     private Date selectedDateTemp;
+    private DateInfo dateInfo;
 
     private static class CalendarCell extends StackPane {
 
@@ -58,7 +61,7 @@ public class CalendarSkin extends SkinBase<CalendarControl> {
 
     public CalendarSkin(CalendarControl calendarControl) {
         super(calendarControl);
-
+        this.dateInfo = new DateInfo();
         this.currentDate = calendarControl.getCurrentDate();          // this currentDate is the selected currentDate
 
         // content the part of BorderPane
@@ -142,7 +145,8 @@ public class CalendarSkin extends SkinBase<CalendarControl> {
             okButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    calendarControl.onSelectDate(selectedYear, selectedMonth, selectedDay, selectedTime);
+                    dateInfo.setDate(selectedYear, selectedMonth, selectedDay, selectedTime);
+                    calendarControl.onSelectDate(dateInfo);
                     selectedDayCellTemp = selectedDayCell;
                     selectedDateTemp = selectedDate;
                 }
@@ -151,25 +155,18 @@ public class CalendarSkin extends SkinBase<CalendarControl> {
                 @Override
                 public void handle(ActionEvent event) {
                     calendarControl.closeCalendar();
-                    if (selectedDayCellTemp != null) {
+                    if (isSameMonth(selectedDate, currentDate)) {
+                        calendarControl.closeCalendar();
                         selectedDayCell.getStyleClass().add("calendar-cell");
                         selectedDayCell.getStyleClass().remove("calendar-cell-selected");
                         selectedDayCellTemp.getStyleClass().remove("calendar-cell");
                         selectedDayCellTemp.getStyleClass().add("calendar-cell-selected");
                         selectedDate = selectedDateTemp;
                         selectedDayCell = selectedDayCellTemp;
-                    }else {
-                        if (isSameMonth(selectedDate, currentDate)) {
-                            selectedDayCell.getStyleClass().add("calendar-cell");
-                            selectedDayCell.getStyleClass().remove("calendar-cell-selected");
-                        } else {
-                            selectedDayCell.getStyleClass().add("calendar-cell");
-                            selectedDayCell.getStyleClass().remove("calendar-cell-selected");
-                            selectedDate = currentDate;
-                            todayCell.getStyleClass().add("calendar-cell-selected");
-                            todayCell.getStyleClass().remove("calendar-cell");
-                            selectedDayCell = todayCell;
-                        }
+                    }else{
+                        selectedDayCell.getStyleClass().add("calendar-cell");
+                        selectedDayCell.getStyleClass().remove("calendar-cell-selected");
+                        selectedDate = currentDate;
                     }
                 }
             });
@@ -213,6 +210,7 @@ public class CalendarSkin extends SkinBase<CalendarControl> {
             cal.setTime(helperDate);
 
             selectedDate = date;
+            selectedDateTemp = selectedDate;
             refresh();
         }
 
@@ -276,11 +274,12 @@ public class CalendarSkin extends SkinBase<CalendarControl> {
                         if (isSameDay(testSelected, cal)) {
                             dayCell.getStyleClass().add("calendar-cell-selected");
                             selectedDayCell = dayCell;
+                            selectedDayCellTemp = selectedDayCell;
                         }
-                        if (isToday(cal)) {
-                            dayCell.getStyleClass().add("calendar-cell-today");
-                            todayCell = dayCell;
-                        }
+//                        if (isToday(cal)) {
+//                            dayCell.getStyleClass().add("calendar-cell-today");
+//                            todayCell = dayCell;
+//                        }
                     }
 
                     dayCell.setOnMouseClicked(new EventHandler<MouseEvent>() {

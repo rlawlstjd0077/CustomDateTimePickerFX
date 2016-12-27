@@ -1,6 +1,7 @@
 package sample.control;
 
 import javafx.scene.control.Control;
+import sample.Data.DateInfo;
 
 import java.util.Date;
 
@@ -10,6 +11,7 @@ import java.util.Date;
 public class CalendarControl extends Control{
     private static final String DEFAULT_STYLE_CLASS = "calendar-form";
     private Date currentDate;
+    private DateInfo dateInfo;
     /**
      * 시간 선택 콤보 박스의 시간 간격 설정 변수
      */
@@ -44,8 +46,10 @@ public class CalendarControl extends Control{
     public int getTimeIntervalMin(){
         return this.intervalMin;
     }
-    public void onSelectDate(int year, int month, int day, String time){
-        this.datePickerControl.setComboBoxText(year, month, day, time);
+    public void onSelectDate(DateInfo dateInfo){
+        this.dateInfo = dateInfo;
+        datePickerControl.setComboBoxText(dateInfo);
+        closeCalendar();
     }
     public void closeCalendar(){
         this.datePickerControl.hidePopup();

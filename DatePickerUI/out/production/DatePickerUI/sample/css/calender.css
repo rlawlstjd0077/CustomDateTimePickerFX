@@ -57,10 +57,13 @@
     -fx-text-alignment: left;
 }
 /*.calendar-cell-today {
-    -fx-background-color: yellow;
+    -fx-background-color: #4189DE;
     -fx-background-radius: 2 2 2 2;
-    -fx-text-fill: skyblue;
     -fx-text-alignment: left;
+}
+.calendar-cell-today .label{
+    -fx-text-fill: white;
+
 }*/
 .top-bar{
     -fx-background-color: #4189DE;
